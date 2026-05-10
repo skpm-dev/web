@@ -13,8 +13,9 @@
 <body>
 
   <header>
-    <span class="logo">skpm</span>
+    <a href="/" class="logo">skpm</a>
     <nav>
+      <a href="/packages.html">Packages</a>
       <a href="#server-admins">For servers</a>
       <a href="#developers">For developers</a>
       <a href="https://github.com/skpm-dev" target="_blank" rel="noopener">
@@ -77,6 +78,14 @@
         <div class="command-card">
           <code>/skpm remove &lt;package&gt;</code>
           <p>Uninstall a package and remove its scripts.</p>
+        </div>
+        <div class="command-card">
+          <code>/skpm update [package]</code>
+          <p>Update a package to the latest version, or omit to update all.</p>
+        </div>
+        <div class="command-card">
+          <code>/skpm search &lt;query&gt;</code>
+          <p>Search the registry for packages by name or description.</p>
         </div>
         <div class="command-card">
           <code>/skpm list</code>
@@ -168,7 +177,7 @@
   </main>
 
   <footer>
-    <span class="logo">skpm</span>
+    <a href="/" class="logo">skpm</a>
     <div class="footer-links">
       <a href="https://github.com/skpm-dev/plugin" target="_blank" rel="noopener">Plugin</a>
       <a href="https://github.com/skpm-dev/cli" target="_blank" rel="noopener">CLI</a>

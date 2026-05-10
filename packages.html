@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Packages — skpm</title>
+  <meta name="description" content="Browse Skript packages available on the skpm registry." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .packages-hero {
+      padding: 80px 0 40px;
+      text-align: center;
+    }
+    .packages-hero h1 {
+      font-size: 2.5rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .packages-hero p {
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 48px;
+    }
+    .search-bar input {
+      width: 100%;
+      max-width: 480px;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-bar input:focus {
+      border-color: var(--accent);
+    }
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      margin-bottom: 80px;
+    }
+    .pkg-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.15s;
+    }
+    .pkg-card:hover {
+      border-color: var(--accent);
+    }
+    .pkg-header {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .pkg-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .pkg-version {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .pkg-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .pkg-author {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .pkg-install {
+      margin-top: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 10%, transparent);
+      border-radius: 6px;
+      padding: 6px 10px;
+      user-select: all;
+    }
+    .state-msg {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 60px 0;
+    }
+    .count-label {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="/" class="logo">skpm</a>
+    <nav>
+      <a href="/packages.html" class="nav-active">Packages</a>
+      <a href="/#server-admins">For servers</a>
+      <a href="/#developers">For developers</a>
+      <a href="https://github.com/skpm-dev" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        GitHub
+      </a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="packages-hero">
+      <h1>Browse packages</h1>
+      <p>Skript packages published to the skpm registry.</p>
+    </div>
+
+    <div class="search-bar">
+      <input id="search" type="text" placeholder="Search packages..." autocomplete="off" />
+    </div>
+
+    <div class="count-label" id="count"></div>
+    <div class="packages-grid" id="grid">
+      <div class="state-msg">Loading packages...</div>
+    </div>
+  </main>
+
+  <footer>
+    <a href="/" class="logo">skpm</a>
+    <div class="footer-links">
+      <a href="https://github.com/skpm-dev/plugin" target="_blank" rel="noopener">Plugin</a>
+      <a href="https://github.com/skpm-dev/cli" target="_blank" rel="noopener">CLI</a>
+      <a href="https://github.com/skpm-dev/registry" target="_blank" rel="noopener">Registry</a>
+      <a href="https://github.com/skpm-dev" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </footer>
+
+  <script>
+    const REGISTRY = 'https://registry.skpm.org';
+    let allPackages = [];
+
+    async function load() {
+      try {
+        const res = await fetch(`${REGISTRY}/packages`);
+        if (!res.ok) throw new Error(`Registry returned ${res.status}`);
+        allPackages = await res.json();
+        render(allPackages);
+      } catch (e) {
+        document.getElementById('grid').innerHTML =
+          `<div class="state-msg">Could not load packages: ${e.message}</div>`;
+      }
+    }
+
+    function render(packages) {
+      const grid = document.getElementById('grid');
+      const count = document.getElementById('count');
+
+      if (!packages || packages.length === 0) {
+        grid.innerHTML = '<div class="state-msg">No packages found.</div>';
+        count.textContent = '';
+        return;
+      }
+
+      count.textContent = `${packages.length} package${packages.length === 1 ? '' : 's'}`;
+      grid.innerHTML = packages.map(pkg => `
+        <div class="pkg-card">
+          <div class="pkg-header">
+            <span class="pkg-name">${pkg.name}</span>
+            <span class="pkg-version">v${pkg.latest}</span>
+          </div>
+          <div class="pkg-desc">${pkg.description || ''}</div>
+          <div class="pkg-author">by ${pkg.author}</div>
+          <div class="pkg-install">/skpm install ${pkg.name}</div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('search').addEventListener('input', e => {
+      const q = e.target.value.trim().toLowerCase();
+      if (!q) {
+        render(allPackages);
+        return;
+      }
+      render(allPackages.filter(p =>
+        p.name.toLowerCase().includes(q) ||
+        (p.description || '').toLowerCase().includes(q)
+      ));
+    });
+
+    load();
+  </script>
+
+</body>
+</html>

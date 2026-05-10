@@ -50,6 +50,7 @@ header {
   font-weight: 500;
   color: var(--text);
   letter-spacing: -0.02em;
+  text-decoration: none;
 }
 
 nav {
@@ -69,6 +70,7 @@ nav a {
 }
 
 nav a:hover { color: var(--text); }
+nav a.nav-active { color: var(--text); }
 
 /* ── Layout ── */
 
