@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>skpm — The package manager for Skript</title>
+  <meta name="description" content="Install, share, and manage Skript packages directly from your Minecraft server." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <span class="logo">skpm</span>
+    <nav>
+      <a href="#server-admins">For servers</a>
+      <a href="#developers">For developers</a>
+      <a href="https://github.com/skpm-dev" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        GitHub
+      </a>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="badge">Open source &middot; Free forever</div>
+      <h1>The package manager<br />for Skript.</h1>
+      <p class="subheading">Install community Skript packages on your server<br />without touching a single file.</p>
+      <div class="hero-ctas">
+        <a class="btn-primary" href="#server-admins">Get started →</a>
+        <a class="btn-ghost" href="https://github.com/skpm-dev" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </section>
+
+    <!-- Server admin section -->
+    <section id="server-admins">
+      <div class="section-label">For server admins</div>
+      <h2>Manage Skript packages<br />from inside the game.</h2>
+      <p class="section-sub">Drop the SKPM plugin into your server once. After that, every package is one command away.</p>
+
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <div class="step-content">
+            <strong>Install the SKPM plugin</strong>
+            <span>Download <code>SKPM.jar</code> and drop it in your <code>plugins/</code> folder, then restart.</span>
+            <a class="step-link" href="https://github.com/skpm-dev/plugin/releases" target="_blank" rel="noopener">Download latest release →</a>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <div class="step-content">
+            <strong>Install packages from in-game</strong>
+            <span>That's it. No FTP, no file transfers, no manual reloads.</span>
+            <div class="chat-mock">
+              <div class="chat-line"><span class="chat-prompt">></span> <span class="chat-cmd">/skpm install economy</span></div>
+              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Installing economy...</div>
+              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Installed economy@1.0.2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3>Commands</h3>
+      <div class="command-grid">
+        <div class="command-card">
+          <code>/skpm install &lt;package&gt;</code>
+          <p>Download, verify, and load a package. Skript reloads automatically.</p>
+        </div>
+        <div class="command-card">
+          <code>/skpm remove &lt;package&gt;</code>
+          <p>Uninstall a package and remove its scripts.</p>
+        </div>
+        <div class="command-card">
+          <code>/skpm list</code>
+          <p>See every installed package and its version.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Developer section -->
+    <section id="developers">
+      <div class="section-label">For script developers</div>
+      <h2>Publish your scripts<br />to the registry.</h2>
+      <p class="section-sub">The skpm CLI handles versioning, packaging, and publishing. One command gets your script in front of every server running skpm.</p>
+
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <div class="step-content">
+            <strong>Install the CLI</strong>
+            <div class="code-block">
+              <div class="code-line">curl -fsSL https://raw.githubusercontent.com/skpm-dev/cli/main/install.sh | sh</div>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <div class="step-content">
+            <strong>Add a <code>skpm.json</code> to your project</strong>
+            <div class="code-block">
+<pre>{
+  "name": "my-economy",
+  "description": "A simple economy system",
+  "version": "1.0.0",
+  "files": ["economy.sk"]
+}</pre>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <div class="step-content">
+            <strong>Publish</strong>
+            <div class="code-block">
+              <div class="code-line">skpm publish</div>
+            </div>
+            <span>skpm prompts for a version bump, then opens a pull request on the registry. Once merged, your package is live.</span>
+          </div>
+        </div>
+      </div>
+
+      <a class="btn-primary" href="https://github.com/skpm-dev/cli" target="_blank" rel="noopener">CLI documentation →</a>
+    </section>
+
+    <!-- Trust section -->
+    <section class="trust">
+      <h2>Secure by default.</h2>
+      <ul class="feature-list">
+        <li>
+          <span class="feature-icon">&#10003;</span>
+          <div>
+            <strong>SHA-256 verified</strong>
+            <span>Every file is checksummed against the registry before it's written to disk.</span>
+          </div>
+        </li>
+        <li>
+          <span class="feature-icon">&#10003;</span>
+          <div>
+            <strong>Lockfile tracking</strong>
+            <span>Every install is recorded in <code>skript.lock</code> — name, version, and per-file integrity hashes.</span>
+          </div>
+        </li>
+        <li>
+          <span class="feature-icon">&#10003;</span>
+          <div>
+            <strong>Ownership enforced</strong>
+            <span>GitHub identity verification means only the original author can publish new versions of a package.</span>
+          </div>
+        </li>
+        <li>
+          <span class="feature-icon">&#10003;</span>
+          <div>
+            <strong>Path-safe installs</strong>
+            <span>Package and file names are validated before touching the filesystem. No path traversal, ever.</span>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer>
+    <span class="logo">skpm</span>
+    <div class="footer-links">
+      <a href="https://github.com/skpm-dev/plugin" target="_blank" rel="noopener">Plugin</a>
+      <a href="https://github.com/skpm-dev/cli" target="_blank" rel="noopener">CLI</a>
+      <a href="https://github.com/skpm-dev/registry" target="_blank" rel="noopener">Registry</a>
+      <a href="https://github.com/skpm-dev" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </footer>
+
+</body>
+</html>
