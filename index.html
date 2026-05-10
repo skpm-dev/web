@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>skpm — The package manager for Skript</title>
-  <meta name="description" content="Install, share, and manage Skript packages directly from your Minecraft server." />
+  <title>skpm - The package manager for Skript</title>
+  <meta name="description" content="Install, share, and manage Skript packages on your Minecraft server. A package manager for Skript, with bonus SpigotMC support." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -16,14 +16,13 @@
     <a href="/" class="logo">skpm</a>
     <nav>
       <a href="/packages.html">Packages</a>
-      <a href="#server-admins">For servers</a>
-      <a href="#spigotmc">SpigotMC</a>
-      <a href="#developers">For developers</a>
-      <a href="https://github.com/skpm-dev" target="_blank" rel="noopener">
+      <a href="#install">Install</a>
+      <a href="#commands">Commands</a>
+      <a href="#developers">For authors</a>
+      <a href="https://github.com/skpm-dev" target="_blank" rel="noopener" aria-label="GitHub">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
         </svg>
-        GitHub
       </a>
     </nav>
   </header>
@@ -32,115 +31,170 @@
 
     <!-- Hero -->
     <section class="hero">
-      <div class="badge">Open source &middot; Free forever</div>
-      <h1>The package manager<br />for Skript.</h1>
-      <p class="subheading">Install community Skript packages on your server<br />without touching a single file.</p>
+      <div class="badge"><span class="dot"></span> Open source · Free forever</div>
+      <h1>The package manager<br/>for Skript.</h1>
+      <p class="subheading">Add Skript addons to your Minecraft server in seconds. No downloading files, no uploading to your host, no restarts. Just type a command in chat and it's done.</p>
       <div class="hero-ctas">
-        <a class="btn-primary" href="#server-admins">Get started →</a>
-        <a class="btn-ghost" href="https://github.com/skpm-dev" target="_blank" rel="noopener">View on GitHub</a>
+        <a class="btn-primary" href="#install">Get started →</a>
+        <a class="btn-ghost" href="/packages.html">Browse packages</a>
+      </div>
+
+      <div class="terminal" aria-hidden="true">
+        <div class="terminal-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="title">minecraft@server ~ skpm</span>
+        </div>
+        <div class="terminal-body" id="termBody"></div>
       </div>
     </section>
 
-    <!-- Server admin section -->
-    <section id="server-admins">
-      <div class="section-label">For server admins</div>
-      <h2>Manage Skript packages<br />from inside the game.</h2>
-      <p class="section-sub">Drop the SKPM plugin into your server once. After that, every package is one command away.</p>
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stats-grid">
+        <div>
+          <div class="stat-num live" id="statPackages">...</div>
+          <div class="stat-label">Packages on registry</div>
+        </div>
+        <div>
+          <div class="stat-num">SpigotMC</div>
+          <div class="stat-label">Direct install support</div>
+        </div>
+        <div>
+          <div class="stat-num">Safe</div>
+          <div class="stat-label">Every download verified</div>
+        </div>
+        <div>
+          <div class="stat-num">1 command</div>
+          <div class="stat-label">From browse to running</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- The registry -->
+    <section id="install">
+      <div class="section-label">The skpm registry</div>
+      <h2>Find scripts and<br/>install them in chat.</h2>
+      <p class="section-sub">A growing collection of community-made Skript addons: economies, mini-games, chat plugins, mechanics, you name it. Pick one, type a command, and it's running on your server.</p>
+
+      <div class="split-grid">
+        <div class="source-card">
+          <div class="src-tag">Easy updates</div>
+          <h3>One command keeps you current.</h3>
+          <p>When an addon gets a new version, run <code>/skpm update</code> and skpm grabs the latest for you. No re-downloading, no replacing files manually.</p>
+          <div class="cmd-snippet">/skpm install economy</div>
+        </div>
+        <div class="source-card">
+          <div class="src-tag">Bonus: SpigotMC</div>
+          <h3>Install straight from SpigotMC, too.</h3>
+          <p>Found a free Skript resource on SpigotMC you want to try? skpm can grab it directly. Just give it the name or the resource ID.</p>
+          <div class="cmd-snippet">/skpm install spigotmc:friends</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison -->
+    <section>
+      <div class="section-label">Why skpm</div>
+      <h2>The old way vs.<br/>one command.</h2>
+      <p class="section-sub">Installing Skript scripts has always been a chore. skpm cuts the whole process down to a single line.</p>
+
+      <div class="compare">
+        <div class="compare-col bad">
+          <h4>Without skpm</h4>
+          <ul>
+            <li><span class="mark">✕</span><span>Search forums and Discord servers for the script you want</span></li>
+            <li><span class="mark">✕</span><span>Download the file to your computer</span></li>
+            <li><span class="mark">✕</span><span>Open your hosting panel or FTP and upload it to the right folder</span></li>
+            <li><span class="mark">✕</span><span>Reload Skript and hope you put it in the right place</span></li>
+            <li><span class="mark">✕</span><span>Lose track of which scripts you've installed and where they came from</span></li>
+            <li><span class="mark">✕</span><span>Repeat the whole thing every time there's an update</span></li>
+          </ul>
+        </div>
+        <div class="compare-col good">
+          <h4>With skpm</h4>
+          <ul>
+            <li><span class="mark">✓</span><span>Type one command in chat, that's it</span></li>
+            <li><span class="mark">✓</span><span>The script downloads, installs, and starts running automatically</span></li>
+            <li><span class="mark">✓</span><span>See everything you've installed with <code>/skpm list</code></span></li>
+            <li><span class="mark">✓</span><span>Every download is checked to make sure it's the real, untampered file</span></li>
+            <li><span class="mark">✓</span><span>Update everything at once with <code>/skpm update</code></span></li>
+            <li><span class="mark">✓</span><span>Don't want it anymore? <code>/skpm remove</code> cleans it up for you</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Setup -->
+    <section>
+      <div class="section-label">Get started in 60 seconds</div>
+      <h2>Setup is just<br/>one file.</h2>
+      <p class="section-sub">If you've ever installed a plugin on a Minecraft server, you already know how to set up skpm. Nothing to configure.</p>
 
       <div class="steps">
         <div class="step">
           <span class="step-num">1</span>
           <div class="step-content">
-            <strong>Install the SKPM plugin</strong>
-            <span>Download <code>SKPM.jar</code> and drop it in your <code>plugins/</code> folder, then restart.</span>
-            <a class="step-link" href="https://github.com/skpm-dev/plugin/releases" target="_blank" rel="noopener">Download latest release →</a>
+            <strong>Add the SKPM plugin to your server</strong>
+            <span>Download <code>SKPM.jar</code> and put it in your server's <code>plugins</code> folder, just like any other plugin. Then restart your server.</span>
+            <div class="code-block">
+              <a href="https://github.com/skpm-dev/plugin/releases" target="_blank" rel="noopener" style="color: var(--accent);">→ Download latest release</a>
+            </div>
           </div>
         </div>
         <div class="step">
           <span class="step-num">2</span>
           <div class="step-content">
-            <strong>Install packages from in-game</strong>
-            <span>That's it. No FTP, no file transfers, no manual reloads.</span>
-            <div class="chat-mock">
-              <div class="chat-line"><span class="chat-prompt">></span> <span class="chat-cmd">/skpm install economy</span></div>
-              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Installing economy...</div>
-              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Installed economy@1.0.2</div>
+            <strong>Install your first script</strong>
+            <span>Hop in-game (or use console) and try one of these. skpm takes care of everything else.</span>
+            <div class="code-block">
+<pre>/skpm install economy            <span style="color:var(--text-muted)"># from the skpm registry</span>
+/skpm install spigotmc:friends   <span style="color:var(--text-muted)"># from SpigotMC by name</span>
+/skpm install spigotmc:12345     <span style="color:var(--text-muted)"># from SpigotMC by ID</span></pre>
             </div>
           </div>
         </div>
       </div>
+    </section>
 
-      <h3>Commands</h3>
+    <!-- Commands -->
+    <section id="commands">
+      <div class="section-label">Commands</div>
+      <h2>The whole command list.</h2>
+      <p class="section-sub">Six of them, all you'll ever need.</p>
+
       <div class="command-grid">
         <div class="command-card">
-          <code>/skpm install &lt;package&gt;</code>
-          <p>Download, verify, and load a package from the skpm registry. Skript reloads automatically.</p>
+          <code>/skpm install &lt;name&gt;</code>
+          <p>Install a script from the skpm registry. It downloads, sets up, and starts running automatically.</p>
         </div>
         <div class="command-card">
-          <code>/skpm install spigotmc:&lt;name|id&gt;</code>
-          <p>Install any free Skript resource directly from SpigotMC — no manual download needed.</p>
-        </div>
-        <div class="command-card">
-          <code>/skpm remove &lt;package&gt;</code>
-          <p>Uninstall a package and remove its scripts.</p>
-        </div>
-        <div class="command-card">
-          <code>/skpm update [package]</code>
-          <p>Update a package to the latest version, or omit to update all.</p>
+          <code>/skpm install spigotmc:&lt;name&gt;</code>
+          <p>Install any free Skript resource from SpigotMC by its name (or its resource ID).</p>
         </div>
         <div class="command-card">
           <code>/skpm search &lt;query&gt;</code>
-          <p>Search the registry for packages by name or description.</p>
+          <p>Look through the registry for scripts by name or what they do.</p>
         </div>
         <div class="command-card">
           <code>/skpm list</code>
-          <p>See every installed package and its version.</p>
+          <p>See every script you've installed and what version it's on.</p>
+        </div>
+        <div class="command-card">
+          <code>/skpm update [name]</code>
+          <p>Update a single script, or leave the name blank to update everything at once.</p>
+        </div>
+        <div class="command-card">
+          <code>/skpm remove &lt;name&gt;</code>
+          <p>Remove a script you don't want anymore. skpm cleans up after itself.</p>
         </div>
       </div>
     </section>
 
-    <!-- SpigotMC section -->
-    <section id="spigotmc">
-      <div class="section-label">SpigotMC</div>
-      <h2>Install directly from<br />SpigotMC.</h2>
-      <p class="section-sub">Thousands of free Skript resources on SpigotMC, one command away. No manual downloads, no FTP, no copy-pasting files.</p>
-
-      <div class="steps">
-        <div class="step">
-          <span class="step-num">1</span>
-          <div class="step-content">
-            <strong>Install by name</strong>
-            <span>skpm searches SpigotMC and installs the matching free Skript resource automatically.</span>
-            <div class="chat-mock">
-              <div class="chat-line"><span class="chat-prompt">></span> <span class="chat-cmd">/skpm install spigotmc:friends</span></div>
-              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Installing spigotmc:friends...</div>
-              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Installed Friends (1.4.2) from SpigotMC</div>
-            </div>
-          </div>
-        </div>
-        <div class="step">
-          <span class="step-num">2</span>
-          <div class="step-content">
-            <strong>Multiple matches? Use the resource ID.</strong>
-            <span>If more than one resource shares a name, skpm lists them with their IDs so you can be precise.</span>
-            <div class="chat-mock">
-              <div class="chat-line"><span class="chat-prompt">></span> <span class="chat-cmd">/skpm install spigotmc:economy</span></div>
-              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Multiple matches — use the resource ID:</div>
-              <div class="chat-line chat-response" style="padding-left:1.25rem"><span class="chat-cmd">#12345 — Economy Pro by AuthorA (2.1.0)</span></div>
-              <div class="chat-line chat-response" style="padding-left:1.25rem"><span class="chat-cmd">#67890 — SimpleEconomy by AuthorB (1.0.3)</span></div>
-              <div class="chat-line"><span class="chat-prompt">></span> <span class="chat-cmd">/skpm install spigotmc:12345</span></div>
-              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Installed Economy Pro (2.1.0) from SpigotMC</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Developer section -->
+    <!-- Developers -->
     <section id="developers">
-      <div class="section-label">For script developers</div>
-      <h2>Publish your scripts<br />to the registry.</h2>
-      <p class="section-sub">The skpm CLI handles versioning, packaging, and publishing. One command gets your script in front of every server running skpm.</p>
+      <div class="section-label">For script authors</div>
+      <h2>Made a Skript addon?<br/>Publish it to the registry.</h2>
+      <p class="section-sub">If you write Skript and want others to use your work, the skpm CLI handles versioning, packaging, and publishing. One command gets your script in front of every server running skpm. <em>(This section is the technical bit. If you just want to install scripts, you can stop reading here.)</em></p>
 
       <div class="steps">
         <div class="step">
@@ -173,47 +227,105 @@
             <div class="code-block">
               <div class="code-line">skpm publish</div>
             </div>
-            <span>skpm prompts for a version bump, then opens a pull request on the registry. Once merged, your package is live.</span>
+            <span style="display:block; margin-top:10px;">skpm prompts for a version bump, then opens a pull request on the registry. Once merged, your package is live for every server running skpm.</span>
           </div>
         </div>
       </div>
 
-      <a class="btn-primary" href="https://github.com/skpm-dev/cli" target="_blank" rel="noopener">CLI documentation →</a>
+      <div style="margin-top: 32px;">
+        <a class="btn-primary" href="https://github.com/skpm-dev/cli" target="_blank" rel="noopener">CLI documentation →</a>
+      </div>
     </section>
 
-    <!-- Trust section -->
-    <section class="trust">
-      <h2>Secure by default.</h2>
+    <!-- Trust -->
+    <section>
+      <div class="section-label">Safe to use</div>
+      <h2>You can trust<br/>what you install.</h2>
+      <p class="section-sub">Running random scripts on your server can go wrong fast. skpm has a few things in place to stop that from happening.</p>
+
       <ul class="feature-list">
         <li>
-          <span class="feature-icon">&#10003;</span>
+          <span class="feature-icon">✓</span>
           <div>
-            <strong>SHA-256 verified</strong>
-            <span>Every file is checksummed against the registry before it's written to disk.</span>
+            <strong>Every download is verified</strong>
+            <span>skpm double-checks every file to make sure no one has tampered with it before installing.</span>
           </div>
         </li>
         <li>
-          <span class="feature-icon">&#10003;</span>
+          <span class="feature-icon">✓</span>
           <div>
-            <strong>Lockfile tracking</strong>
-            <span>Every install is recorded in <code>skript.lock</code> — name, version, and per-file integrity hashes.</span>
+            <strong>Always know what you have</strong>
+            <span>skpm keeps a record of every script you've installed and which version it's on. Use <code>/skpm list</code> to see it any time.</span>
           </div>
         </li>
         <li>
-          <span class="feature-icon">&#10003;</span>
+          <span class="feature-icon">✓</span>
           <div>
-            <strong>Ownership enforced</strong>
-            <span>GitHub identity verification means only the original author can publish new versions of a package.</span>
+            <strong>Only real authors can publish</strong>
+            <span>Every script in the registry is tied to its author through GitHub. No one else can sneak in a fake update.</span>
           </div>
         </li>
         <li>
-          <span class="feature-icon">&#10003;</span>
+          <span class="feature-icon">✓</span>
           <div>
-            <strong>Path-safe installs</strong>
-            <span>Package and file names are validated before touching the filesystem. No path traversal, ever.</span>
+            <strong>Limited access</strong>
+            <span>skpm only ever writes to your scripts folder. It can't touch anything else on your server.</span>
           </div>
         </li>
       </ul>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="section-label">FAQ</div>
+      <h2>Frequently asked questions.</h2>
+      <p class="section-sub">If yours isn't here, ask in our Discord or open a discussion on GitHub.</p>
+
+      <div class="faq">
+        <details>
+          <summary>Is skpm free?</summary>
+          <div class="answer">Yep, skpm is open source under the MIT license. Free for any server, commercial or otherwise. There's no paid tier, no telemetry, and no account required to install packages.</div>
+        </details>
+        <details>
+          <summary>What do I need to use skpm?</summary>
+          <div class="answer">A Minecraft server (Spigot, Paper, or similar) with the <a href="https://github.com/SkriptLang/Skript" target="_blank" rel="noopener" style="color:var(--accent)">Skript</a> plugin installed. skpm is a second plugin that works alongside Skript. Drop the jar in your <code>plugins</code> folder and restart, that's it.</div>
+        </details>
+        <details>
+          <summary>How does installing from SpigotMC work?</summary>
+          <div class="answer">skpm searches SpigotMC for the resource you asked for, downloads it, and sets it up on your server automatically. Updating and removing works exactly the same as registry scripts, so you don't have to think about where it came from.</div>
+        </details>
+        <details>
+          <summary>Can I install premium SpigotMC resources?</summary>
+          <div class="answer">No, only free resources. Paid SpigotMC resources require you to be signed in with the account that bought them, so you'll have to install those the usual way.</div>
+        </details>
+        <details>
+          <summary>What if two SpigotMC scripts have the same name?</summary>
+          <div class="answer">skpm will show you every match it found, each with its own resource ID. Pick the one you want and install it by ID, for example <code>/skpm install spigotmc:12345</code>.</div>
+        </details>
+        <details>
+          <summary>Do I need to reload Skript after installing?</summary>
+          <div class="answer">Nope, skpm reloads Skript for you. If something goes wrong with the script, skpm tells you and undoes the install, so your server doesn't end up in a broken state.</div>
+        </details>
+        <details>
+          <summary>How do I remove a script I no longer want?</summary>
+          <div class="answer">Just run <code>/skpm remove &lt;name&gt;</code>. skpm deletes the script's files and reloads Skript. Nothing left behind.</div>
+        </details>
+        <details>
+          <summary>I write Skript, how do I publish my own?</summary>
+          <div class="answer">If you're a script author, see the <a href="#developers" style="color:var(--accent)">For authors</a> section above. The short version: install the skpm CLI, add a small config file to your project, and run <code>skpm publish</code>. After your submission is reviewed, anyone running skpm can install it by name.</div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Community / support -->
+    <section id="community" style="text-align:center;">
+      <div class="section-label">Need help?</div>
+      <h2>Come say hi on Discord.</h2>
+      <p class="section-sub" style="margin-left:auto; margin-right:auto;">Stuck on something, found a bug, or want to share what you're building? Our Discord is the fastest way to get help and chat with other server owners using skpm.</p>
+      <div class="hero-ctas" style="margin-bottom:0;">
+        <a class="btn-primary" href="https://discord.gg/WTT6FSsjCR" target="_blank" rel="noopener">Join the Discord →</a>
+        <a class="btn-ghost" href="https://github.com/skpm-dev" target="_blank" rel="noopener">Open an issue on GitHub</a>
+      </div>
     </section>
 
   </main>
@@ -221,12 +333,112 @@
   <footer>
     <a href="/" class="logo">skpm</a>
     <div class="footer-links">
+      <a href="/packages.html">Packages</a>
+      <a href="https://discord.gg/WTT6FSsjCR" target="_blank" rel="noopener">Discord</a>
       <a href="https://github.com/skpm-dev/plugin" target="_blank" rel="noopener">Plugin</a>
       <a href="https://github.com/skpm-dev/cli" target="_blank" rel="noopener">CLI</a>
       <a href="https://github.com/skpm-dev/registry" target="_blank" rel="noopener">Registry</a>
       <a href="https://github.com/skpm-dev" target="_blank" rel="noopener">GitHub</a>
     </div>
   </footer>
+
+  <script>
+    // Animated terminal
+    (function() {
+      const body = document.getElementById('termBody');
+      if (!body) return;
+
+      const sequence = [
+        { type: 'prompt', text: '$ ', delay: 200 },
+        { type: 'cmd', text: '/skpm install economy', delay: 80, typed: true },
+        { type: 'newline' },
+        { type: 'out', text: '[SKPM] Resolving economy from registry...', delay: 400 },
+        { type: 'newline' },
+        { type: 'out', text: '[SKPM] Verifying SHA-256... ', delay: 400 },
+        { type: 'ok', text: 'ok', delay: 200 },
+        { type: 'newline' },
+        { type: 'ok', text: '[SKPM] ✓ Installed economy@1.0.2', delay: 300 },
+        { type: 'newline' },
+        { type: 'pause', delay: 800 },
+        { type: 'prompt', text: '$ ', delay: 0 },
+        { type: 'cmd', text: '/skpm install spigotmc:friends', delay: 70, typed: true },
+        { type: 'newline' },
+        { type: 'out', text: '[SKPM] Searching SpigotMC for "friends"...', delay: 500 },
+        { type: 'newline' },
+        { type: 'out', text: '[SKPM] Found resource #41234 (Friends by SkriptDev)', delay: 400 },
+        { type: 'newline' },
+        { type: 'ok', text: '[SKPM] ✓ Installed Friends (1.4.2) from SpigotMC', delay: 300 },
+        { type: 'newline' },
+        { type: 'pause', delay: 1200 },
+      ];
+
+      let cursor = document.createElement('span');
+      cursor.className = 'cursor';
+
+      function reset() {
+        body.innerHTML = '';
+        body.appendChild(cursor);
+      }
+
+      function append(node) {
+        body.insertBefore(node, cursor);
+      }
+
+      function span(cls, text) {
+        const s = document.createElement('span');
+        s.className = cls;
+        s.textContent = text;
+        return s;
+      }
+
+      async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+      async function typeInto(parent, text, perCharMs) {
+        for (const ch of text) {
+          parent.textContent += ch;
+          await sleep(perCharMs);
+        }
+      }
+
+      async function run() {
+        while (true) {
+          reset();
+          for (const step of sequence) {
+            if (step.type === 'newline') {
+              append(document.createElement('br'));
+              continue;
+            }
+            if (step.type === 'pause') {
+              await sleep(step.delay);
+              continue;
+            }
+            if (step.typed) {
+              const s = span(step.type, '');
+              append(s);
+              await typeInto(s, step.text, step.delay);
+            } else {
+              append(span(step.type, step.text));
+              await sleep(step.delay || 0);
+            }
+          }
+          await sleep(1500);
+        }
+      }
+      run();
+    })();
+
+    // Live package count
+    (function() {
+      const el = document.getElementById('statPackages');
+      if (!el) return;
+      fetch('https://registry.skpm.org/packages')
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(pkgs => {
+          if (Array.isArray(pkgs)) el.textContent = pkgs.length.toLocaleString();
+        })
+        .catch(() => { el.textContent = '?'; });
+    })();
+  </script>
 
 </body>
 </html>
