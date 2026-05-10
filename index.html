@@ -17,6 +17,7 @@
     <nav>
       <a href="/packages.html">Packages</a>
       <a href="#server-admins">For servers</a>
+      <a href="#spigotmc">SpigotMC</a>
       <a href="#developers">For developers</a>
       <a href="https://github.com/skpm-dev" target="_blank" rel="noopener">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
@@ -73,7 +74,11 @@
       <div class="command-grid">
         <div class="command-card">
           <code>/skpm install &lt;package&gt;</code>
-          <p>Download, verify, and load a package. Skript reloads automatically.</p>
+          <p>Download, verify, and load a package from the skpm registry. Skript reloads automatically.</p>
+        </div>
+        <div class="command-card">
+          <code>/skpm install spigotmc:&lt;name|id&gt;</code>
+          <p>Install any free Skript resource directly from SpigotMC — no manual download needed.</p>
         </div>
         <div class="command-card">
           <code>/skpm remove &lt;package&gt;</code>
@@ -90,6 +95,43 @@
         <div class="command-card">
           <code>/skpm list</code>
           <p>See every installed package and its version.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SpigotMC section -->
+    <section id="spigotmc">
+      <div class="section-label">SpigotMC</div>
+      <h2>Install directly from<br />SpigotMC.</h2>
+      <p class="section-sub">Thousands of free Skript resources on SpigotMC, one command away. No manual downloads, no FTP, no copy-pasting files.</p>
+
+      <div class="steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <div class="step-content">
+            <strong>Install by name</strong>
+            <span>skpm searches SpigotMC and installs the matching free Skript resource automatically.</span>
+            <div class="chat-mock">
+              <div class="chat-line"><span class="chat-prompt">></span> <span class="chat-cmd">/skpm install spigotmc:friends</span></div>
+              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Installing spigotmc:friends...</div>
+              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Installed Friends (1.4.2) from SpigotMC</div>
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <div class="step-content">
+            <strong>Multiple matches? Use the resource ID.</strong>
+            <span>If more than one resource shares a name, skpm lists them with their IDs so you can be precise.</span>
+            <div class="chat-mock">
+              <div class="chat-line"><span class="chat-prompt">></span> <span class="chat-cmd">/skpm install spigotmc:economy</span></div>
+              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Multiple matches — use the resource ID:</div>
+              <div class="chat-line chat-response" style="padding-left:1.25rem"><span class="chat-cmd">#12345 — Economy Pro by AuthorA (2.1.0)</span></div>
+              <div class="chat-line chat-response" style="padding-left:1.25rem"><span class="chat-cmd">#67890 — SimpleEconomy by AuthorB (1.0.3)</span></div>
+              <div class="chat-line"><span class="chat-prompt">></span> <span class="chat-cmd">/skpm install spigotmc:12345</span></div>
+              <div class="chat-line chat-response"><span class="chat-tag">[SKPM]</span> Installed Economy Pro (2.1.0) from SpigotMC</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
