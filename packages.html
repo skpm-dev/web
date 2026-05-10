@@ -44,13 +44,6 @@
     </div>
   </main>
 
-  <div id="modal-overlay" class="modal-overlay" hidden>
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-      <button id="modal-close" class="modal-close" aria-label="Close">&times;</button>
-      <div id="modal-body">Loading…</div>
-    </div>
-  </div>
-
   <footer>
     <a href="/" class="logo">skpm</a>
     <div class="footer-links">
@@ -104,7 +97,7 @@
 
       count.textContent = `${packages.length} package${packages.length === 1 ? '' : 's'}`;
       grid.innerHTML = packages.map(pkg => `
-        <div class="pkg-card" data-name="${escapeHtml(pkg.name)}" role="button" tabindex="0" style="cursor:pointer">
+        <a class="pkg-card" href="/package.html?name=${encodeURIComponent(pkg.name)}">
           <div class="pkg-header">
             <span class="pkg-name">${escapeHtml(pkg.name)}</span>
             <span class="pkg-version">v${escapeHtml(pkg.latest)}</span>
@@ -115,11 +108,12 @@
             <span class="pkg-downloads">${fmtDownloads(pkg.downloads)} downloads</span>
           </div>
           <div class="pkg-install" title="Click to copy" data-cmd="/skpm install ${escapeHtml(pkg.name)}">/skpm install ${escapeHtml(pkg.name)}</div>
-        </div>
+        </a>
       `).join('');
 
       grid.querySelectorAll('.pkg-install').forEach(el => {
         el.addEventListener('click', e => {
+          e.preventDefault();
           e.stopPropagation();
           const cmd = el.getAttribute('data-cmd');
           if (navigator.clipboard) {
@@ -131,143 +125,6 @@
           }
         });
       });
-
-      grid.querySelectorAll('.pkg-card').forEach(card => {
-        card.addEventListener('click', () => openModal(card.dataset.name));
-        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(card.dataset.name); });
-      });
-    }
-
-    // ── Modal ────────────────────────────────────────────────────────────────
-
-    const overlay = document.getElementById('modal-overlay');
-    const modalBody = document.getElementById('modal-body');
-
-    document.getElementById('modal-close').addEventListener('click', closeModal);
-    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-    function openModal(name) {
-      modalBody.innerHTML = '<div class="modal-loading">Loading…</div>';
-      overlay.hidden = false;
-      document.body.style.overflow = 'hidden';
-      fetchAndRenderModal(name);
-    }
-
-    function closeModal() {
-      overlay.hidden = true;
-      document.body.style.overflow = '';
-    }
-
-    async function fetchAndRenderModal(name) {
-      try {
-        const res = await fetch(`${REGISTRY}/packages/${encodeURIComponent(name)}`);
-        if (!res.ok) throw new Error(`Registry returned ${res.status}`);
-        const pkg = await res.json();
-        renderModal(pkg);
-      } catch (e) {
-        modalBody.innerHTML = `<div class="modal-loading">Failed to load: ${escapeHtml(e.message)}</div>`;
-      }
-    }
-
-    function renderModal(pkg) {
-      const versions = Object.entries(pkg.versions || {})
-        .sort(([a], [b]) => semverCmp(b, a));
-
-      const latestEntry = pkg.versions?.[pkg.latest] ?? versions[0]?.[1] ?? null;
-
-      const dlStr = `<span class="modal-stat"><span class="modal-stat-val">${fmtDownloads(pkg.downloads)}</span><span class="modal-stat-label">downloads</span></span>`;
-
-      const requirementsHtml = latestEntry ? buildRequirements(latestEntry) : '';
-
-      const versionsHtml = versions.map(([v, entry]) => `
-        <div class="mv-row ${entry.yanked ? 'mv-yanked' : ''}">
-          <span class="mv-ver">${escapeHtml(v)}${v === pkg.latest ? ' <span class="mv-latest">latest</span>' : ''}${entry.yanked ? ' <span class="mv-yank-badge">yanked</span>' : ''}</span>
-          ${entry.yanked && entry.yank_reason ? `<span class="mv-yank-reason">${escapeHtml(entry.yank_reason)}</span>` : ''}
-        </div>
-      `).join('');
-
-      const filesHtml = latestEntry?.files?.length ? `
-        <div class="modal-section">
-          <div class="modal-section-title">Files</div>
-          ${latestEntry.files.map(f => `
-            <div class="mf-row">
-              <span class="mf-name">${escapeHtml(f.name)}</span>
-              <span class="mf-hash" title="${escapeHtml(f.sha256)}">${escapeHtml((f.sha256 || '').slice(0, 12))}…</span>
-            </div>
-          `).join('')}
-        </div>
-      ` : '';
-
-      const installCmd = `/skpm install ${escapeHtml(pkg.name)}`;
-
-      modalBody.innerHTML = `
-        <div class="modal-header">
-          <div>
-            <div class="modal-title-row">
-              <span id="modal-title" class="modal-pkg-name">${escapeHtml(pkg.name)}</span>
-              <span class="pkg-version">v${escapeHtml(pkg.latest)}</span>
-            </div>
-            <div class="modal-author">by ${escapeHtml(pkg.author)}</div>
-          </div>
-          ${dlStr}
-        </div>
-        ${pkg.description ? `<div class="modal-desc">${escapeHtml(pkg.description)}</div>` : ''}
-        <div class="modal-install" title="Click to copy" data-cmd="${installCmd}">${installCmd}</div>
-        ${requirementsHtml}
-        ${filesHtml}
-        ${versions.length > 1 ? `
-        <div class="modal-section">
-          <div class="modal-section-title">All versions</div>
-          <div class="mv-list">${versionsHtml}</div>
-        </div>` : ''}
-      `;
-
-      modalBody.querySelector('.modal-install')?.addEventListener('click', el => {
-        const cmd = el.currentTarget.getAttribute('data-cmd');
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(cmd).then(() => {
-            const t = el.currentTarget;
-            const orig = t.textContent;
-            t.textContent = '✓ copied';
-            setTimeout(() => { t.textContent = orig; }, 1200);
-          });
-        }
-      });
-    }
-
-    function buildRequirements(entry) {
-      const rows = [];
-      if (entry.skript) rows.push(['Skript', entry.skript]);
-      if (entry.minecraft) rows.push(['Minecraft', entry.minecraft]);
-      if (entry.addons && Object.keys(entry.addons).length) {
-        for (const [addon, ver] of Object.entries(entry.addons)) {
-          rows.push([addon, ver]);
-        }
-      }
-      if (!rows.length) return '';
-      return `
-        <div class="modal-section">
-          <div class="modal-section-title">Requirements</div>
-          <div class="req-grid">
-            ${rows.map(([k, v]) => `
-              <div class="req-row">
-                <span class="req-key">${escapeHtml(k)}</span>
-                <span class="req-val">${escapeHtml(v)}</span>
-              </div>
-            `).join('')}
-          </div>
-        </div>
-      `;
-    }
-
-    function semverCmp(a, b) {
-      const pa = a.split('.').map(Number);
-      const pb = b.split('.').map(Number);
-      for (let i = 0; i < 3; i++) {
-        if ((pa[i] ?? 0) !== (pb[i] ?? 0)) return (pa[i] ?? 0) - (pb[i] ?? 0);
-      }
-      return 0;
     }
 
     document.getElementById('search').addEventListener('input', e => {

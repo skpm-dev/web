@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Package - skpm</title>
+  <meta name="description" content="skpm package details" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <a href="/" class="logo">skpm</a>
+    <nav>
+      <a href="/packages.html">Packages</a>
+      <a href="/#install">Install</a>
+      <a href="/#commands">Commands</a>
+      <a href="/#developers">Developers</a>
+      <a href="https://github.com/skpm-dev" target="_blank" rel="noopener" aria-label="GitHub">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+      </a>
+    </nav>
+  </header>
+
+  <main class="pkg-page-main">
+    <div id="pkg-content">
+      <div class="state-msg" style="padding-top: 80px;">Loading…</div>
+    </div>
+  </main>
+
+  <footer>
+    <a href="/" class="logo">skpm</a>
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="https://discord.gg/WTT6FSsjCR" target="_blank" rel="noopener">Discord</a>
+      <a href="https://github.com/skpm-dev/plugin" target="_blank" rel="noopener">Plugin</a>
+      <a href="https://github.com/skpm-dev/cli" target="_blank" rel="noopener">CLI</a>
+      <a href="https://github.com/skpm-dev/registry" target="_blank" rel="noopener">Registry</a>
+      <a href="https://github.com/skpm-dev" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </footer>
+
+  <script>
+    const REGISTRY = 'https://registry.skpm.org';
+    const params = new URLSearchParams(location.search);
+    const pkgName = params.get('name');
+
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, c => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[c]));
+    }
+
+    function fmtDownloads(n) {
+      if (n >= 1000000) return (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+      if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+      return String(n);
+    }
+
+    function semverCmp(a, b) {
+      const pa = a.split('.').map(Number);
+      const pb = b.split('.').map(Number);
+      for (let i = 0; i < 3; i++) {
+        if ((pa[i] ?? 0) !== (pb[i] ?? 0)) return (pa[i] ?? 0) - (pb[i] ?? 0);
+      }
+      return 0;
+    }
+
+    async function load() {
+      const content = document.getElementById('pkg-content');
+
+      if (!pkgName) {
+        content.innerHTML = '<div class="state-msg" style="padding-top:80px;">No package specified.</div>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${REGISTRY}/packages/${encodeURIComponent(pkgName)}`);
+        if (res.status === 404) throw new Error('Package not found');
+        if (res.status === 410) {
+          const data = await res.json();
+          throw new Error(data.error || 'Package has been removed');
+        }
+        if (!res.ok) throw new Error(`Registry returned ${res.status}`);
+        const pkg = await res.json();
+        render(pkg);
+      } catch (e) {
+        content.innerHTML = `<div class="state-msg" style="padding-top:80px;">${escapeHtml(e.message)}</div>`;
+      }
+    }
+
+    function render(pkg) {
+      document.title = `${pkg.name} — skpm`;
+
+      const versions = Object.entries(pkg.versions || {}).sort(([a], [b]) => semverCmp(b, a));
+      const latestEntry = pkg.versions?.[pkg.latest] ?? versions[0]?.[1] ?? null;
+
+      const requirementsHtml = latestEntry ? buildRequirements(latestEntry) : '';
+
+      const filesHtml = latestEntry?.files?.length ? `
+        <div class="pkg-page-section">
+          <div class="pkg-page-section-title">Files</div>
+          ${latestEntry.files.map(f => `
+            <div class="mf-row">
+              <span class="mf-name">${escapeHtml(f.name)}</span>
+              <span class="mf-hash" title="${escapeHtml(f.sha256)}">${escapeHtml((f.sha256 || '').slice(0, 18))}…</span>
+            </div>
+          `).join('')}
+        </div>
+      ` : '';
+
+      const versionsHtml = versions.length > 0 ? `
+        <div class="pkg-page-section">
+          <div class="pkg-page-section-title">Versions</div>
+          <div class="mv-list">
+            ${versions.map(([v, entry]) => `
+              <div class="mv-row ${entry.yanked ? 'mv-yanked' : ''}">
+                <span class="mv-ver">${escapeHtml(v)}${v === pkg.latest ? ' <span class="mv-latest">latest</span>' : ''}${entry.yanked ? ' <span class="mv-yank-badge">yanked</span>' : ''}</span>
+                ${entry.yanked && entry.yank_reason ? `<span class="mv-yank-reason">${escapeHtml(entry.yank_reason)}</span>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      ` : '';
+
+      const installCmd = `/skpm install ${pkg.name}`;
+
+      document.getElementById('pkg-content').innerHTML = `
+        <a href="/packages.html" class="pkg-page-back">← Back to packages</a>
+
+        <div class="pkg-page-header">
+          <div class="pkg-page-title-block">
+            <div class="pkg-page-title-row">
+              <h1 class="pkg-page-name">${escapeHtml(pkg.name)}</h1>
+              <span class="pkg-version">v${escapeHtml(pkg.latest)}</span>
+            </div>
+            <div class="pkg-page-author">by ${escapeHtml(pkg.author)}</div>
+          </div>
+          <div class="pkg-page-stat">
+            <span class="pkg-page-stat-val">${fmtDownloads(pkg.downloads)}</span>
+            <span class="pkg-page-stat-label">downloads</span>
+          </div>
+        </div>
+
+        ${pkg.description ? `<p class="pkg-page-desc">${escapeHtml(pkg.description)}</p>` : ''}
+
+        <div class="pkg-page-install" data-cmd="${escapeHtml(installCmd)}">${escapeHtml(installCmd)}</div>
+
+        ${requirementsHtml}
+        ${filesHtml}
+        ${versionsHtml}
+      `;
+
+      document.querySelector('.pkg-page-install').addEventListener('click', function() {
+        const cmd = this.getAttribute('data-cmd');
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(cmd).then(() => {
+            const orig = this.textContent;
+            this.textContent = '✓ copied';
+            setTimeout(() => { this.textContent = orig; }, 1200);
+          });
+        }
+      });
+    }
+
+    function buildRequirements(entry) {
+      const rows = [];
+      if (entry.skript) rows.push(['Skript', entry.skript]);
+      if (entry.minecraft) rows.push(['Minecraft', entry.minecraft]);
+      if (entry.addons && Object.keys(entry.addons).length) {
+        for (const [addon, ver] of Object.entries(entry.addons)) {
+          rows.push([addon, ver]);
+        }
+      }
+      if (!rows.length) return '';
+      return `
+        <div class="pkg-page-section">
+          <div class="pkg-page-section-title">Requirements</div>
+          <div class="req-grid">
+            ${rows.map(([k, v]) => `
+              <div class="req-row">
+                <span class="req-key">${escapeHtml(k)}</span>
+                <span class="req-val">${escapeHtml(v)}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    load();
+  </script>
+
+</body>
+</html>
