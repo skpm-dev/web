@@ -112,7 +112,7 @@
           <div class="pkg-desc">${escapeHtml(pkg.description || '')}</div>
           <div class="pkg-meta">
             <span class="pkg-author">by ${escapeHtml(pkg.author)}</span>
-            ${pkg.downloads > 0 ? `<span class="pkg-downloads">${fmtDownloads(pkg.downloads)} downloads</span>` : ''}
+            <span class="pkg-downloads">${fmtDownloads(pkg.downloads)} downloads</span>
           </div>
           <div class="pkg-install" title="Click to copy" data-cmd="/skpm install ${escapeHtml(pkg.name)}">/skpm install ${escapeHtml(pkg.name)}</div>
         </div>
@@ -176,9 +176,7 @@
 
       const latestEntry = pkg.versions?.[pkg.latest] ?? versions[0]?.[1] ?? null;
 
-      const dlStr = pkg.downloads > 0
-        ? `<span class="modal-stat"><span class="modal-stat-val">${fmtDownloads(pkg.downloads)}</span><span class="modal-stat-label">downloads</span></span>`
-        : '';
+      const dlStr = `<span class="modal-stat"><span class="modal-stat-val">${fmtDownloads(pkg.downloads)}</span><span class="modal-stat-label">downloads</span></span>`;
 
       const requirementsHtml = latestEntry ? buildRequirements(latestEntry) : '';
 
