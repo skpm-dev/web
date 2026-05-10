@@ -542,11 +542,11 @@ footer {
   background: rgba(5, 5, 5, 0.75);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
 }
+.modal-overlay:not([hidden]) { display: flex; }
 .modal {
   position: relative;
   background: var(--bg-elev);
