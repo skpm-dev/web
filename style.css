@@ -556,7 +556,7 @@ footer {
   max-width: 600px;
   max-height: 85vh;
   overflow-y: auto;
-  padding: 28px;
+  padding: 28px 52px 28px 28px;
   box-shadow: 0 40px 100px rgba(0,0,0,0.6);
 }
 .modal-close {
