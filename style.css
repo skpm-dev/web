@@ -678,6 +678,14 @@ footer {
   transition: color 0.15s, border-color 0.15s;
 }
 .mf-copy:hover { color: var(--text); border-color: var(--border-strong); }
+.mf-gh {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  color: var(--text-muted);
+  transition: color 0.15s;
+}
+.mf-gh:hover { color: var(--text); }
 
 /* Responsive */
 @media (max-width: 780px) {
