@@ -35,7 +35,11 @@
     </div>
 
     <div class="search-bar">
-      <input id="search" type="text" placeholder="Search packages by name or description..." autocomplete="off" />
+      <input id="search" type="text" placeholder="Search packages by name or description..." autocomplete="off" disabled />
+      <select id="sort">
+        <option value="downloads">Most downloaded</option>
+        <option value="name">Name A–Z</option>
+      </select>
     </div>
 
     <div class="count-label" id="count">Loading…</div>
@@ -60,16 +64,26 @@
     const REGISTRY = 'https://registry.skpm.org';
     let allPackages = [];
 
+    function sorted(packages) {
+      const order = document.getElementById('sort').value;
+      const copy = [...packages];
+      if (order === 'name') copy.sort((a, b) => a.name.localeCompare(b.name));
+      else copy.sort((a, b) => (b.downloads ?? 0) - (a.downloads ?? 0));
+      return copy;
+    }
+
     async function load() {
       try {
         const res = await fetch(`${REGISTRY}/packages`);
         if (!res.ok) throw new Error(`Registry returned ${res.status}`);
         allPackages = await res.json();
-        render(allPackages);
+        document.getElementById('search').disabled = false;
+        render(sorted(allPackages));
       } catch (e) {
         document.getElementById('grid').innerHTML =
           `<div class="state-msg">Could not load packages: ${e.message}</div>`;
         document.getElementById('count').textContent = '';
+        document.getElementById('search').disabled = false;
       }
     }
 
@@ -127,14 +141,17 @@
       });
     }
 
-    document.getElementById('search').addEventListener('input', e => {
-      const q = e.target.value.trim().toLowerCase();
-      if (!q) { render(allPackages); return; }
-      render(allPackages.filter(p =>
+    function filtered() {
+      const q = document.getElementById('search').value.trim().toLowerCase();
+      const pkgs = q ? allPackages.filter(p =>
         p.name.toLowerCase().includes(q) ||
         (p.description || '').toLowerCase().includes(q)
-      ));
-    });
+      ) : allPackages;
+      return sorted(pkgs);
+    }
+
+    document.getElementById('search').addEventListener('input', () => render(filtered()));
+    document.getElementById('sort').addEventListener('change', () => render(filtered()));
 
     load();
   </script>
