@@ -193,7 +193,8 @@ p { margin: 0 0 16px; color: var(--text-dim); }
   font-family: var(--mono);
   font-size: 0.9rem;
   line-height: 1.7;
-  min-height: 220px;
+  height: 220px;
+  overflow: hidden;
 }
 .terminal-body .line { white-space: pre-wrap; }
 .terminal-body .prompt { color: var(--accent); }
