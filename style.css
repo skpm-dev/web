@@ -687,6 +687,171 @@ footer {
 }
 .mf-gh:hover { color: var(--text); }
 
+/* Changelog page */
+.cl-main { max-width: var(--maxw); margin: 0 auto; padding: 0 32px; }
+
+.cl-hero {
+  padding: 80px 0 48px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+.cl-title {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  margin: 12px 0 10px;
+  background: linear-gradient(180deg, #fff 0%, #9ca3af 130%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.cl-subtitle { color: var(--text-muted); font-size: 1rem; margin: 0; }
+
+.cl-tabs-wrap { margin-bottom: 32px; }
+.cl-tabs {
+  display: inline-flex;
+  gap: 3px;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.cl-tab {
+  padding: 7px 18px;
+  border: none;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+.cl-tab:hover { color: var(--text-dim); }
+.cl-tab.active {
+  background: var(--bg-elev);
+  color: var(--text);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.cl-panel { padding-bottom: 80px; }
+
+.cl-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 48px 0;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.cl-spinner {
+  flex-shrink: 0;
+  width: 15px; height: 15px;
+  border: 2px solid var(--border-strong);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: cl-spin 0.65s linear infinite;
+}
+@keyframes cl-spin { to { transform: rotate(360deg); } }
+
+.cl-error {
+  padding: 48px 0;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  color: var(--danger);
+}
+
+/* Release blocks (CLI + Plugin) */
+.cl-release {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 12px;
+  transition: border-color 0.15s;
+}
+.cl-release:hover { border-color: var(--border-strong); }
+
+.cl-release-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  background: var(--bg-elev);
+  border-bottom: 1px solid var(--border);
+}
+.cl-tag {
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text);
+  transition: color 0.15s;
+}
+.cl-tag:hover { color: var(--accent); }
+.cl-badge-latest {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid rgba(163, 230, 53, 0.25);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.cl-date {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.cl-commits { list-style: none; padding: 4px 0; margin: 0; }
+.cl-commit {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 20px;
+  border-top: 1px solid var(--border);
+}
+.cl-commit:first-child { border-top: none; }
+.cl-sha {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--accent);
+  opacity: 0.85;
+  transition: opacity 0.15s;
+}
+.cl-sha:hover { opacity: 1; }
+.cl-msg {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.cl-empty .cl-msg { color: var(--text-muted); font-style: italic; }
+
+/* Registry commit list */
+.cl-reg-list { display: flex; flex-direction: column; gap: 6px; }
+.cl-reg-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color 0.15s;
+}
+.cl-reg-row:hover { border-color: var(--border-strong); }
+.cl-reg-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  min-width: 130px;
+}
+
 /* Responsive */
 @media (max-width: 780px) {
   header { padding: 12px 20px; }
