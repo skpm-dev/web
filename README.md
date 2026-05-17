@@ -40,13 +40,6 @@ npx serve .
 # Or just open index.html directly in your browser
 ```
 
-To point the pages at a local registry, find and update the `REGISTRY` constant at the top of each HTML file:
-
-```js
-// Change this in each file
-const REGISTRY = 'http://localhost:8080';
-```
-
 ---
 
 ## Structure
